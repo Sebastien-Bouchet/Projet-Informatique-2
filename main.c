@@ -4,6 +4,35 @@
 #include "header.h"
 
 
+typedef struct {
+    int x, y;
+    int dx, dy;
+    int couper;
+    int prendre;
+    int poser;
+    BITMAP *image;
+} Action;
+
+typedef struct {
+    int x, y;
+    BITMAP *image;
+} Aliment;
+
+void deplacement(Action Dragon, Aliment tomate, BITMAP *page) {
+    if ((Dragon.x >= tomate.x - 5 && Dragon.x <= tomate.x + 5) &&
+        (Dragon.y >= tomate.y - 5 && Dragon.y <= tomate.y + 5)) {
+        if (key[KEY_V]) {
+            while (key[KEY_V]) {
+                tomate.x = Dragon.x;
+                tomate.y = Dragon.y;
+                Dragon.image = load_bitmap("../images/dragon/moustique.bmp", NULL);
+                stretch_blit(Dragon.image, page, 0, 0, Dragon.image->w, Dragon.image->h, Dragon.x, Dragon.y, 50, 50);
+                stretch_blit(tomate.image, page, 0, 0, tomate.image->w, tomate.image->h, tomate.x, tomate.y, 50, 50);
+            }
+        }
+    }
+}
+
 int main() {
     allegro_init();
     install_keyboard();
@@ -29,11 +58,15 @@ int main() {
     Action Dragon;
     Action Serpent;
     Action Sol;
+    Aliment tomate;
 
     Dragon.x = 200, Dragon.y = 200, Dragon.dx = 0, Dragon.dy = 0;
     Serpent.x = 100, Serpent.y = 100, Serpent.dx = 0, Serpent.dy = 0;
     Sol.x = 0, Sol.y = 0, Sol.dx = 0, Sol.dy = 0;
+    tomate.x = 400;
+    tomate.y = 400;
 
+    tomate.image = load_bitmap("../images/dragon/crabe.bmp", NULL);
     Dragon.image = load_bitmap("../images/dragon/dragon.bmp", NULL);
     Serpent.image = load_bitmap("../images/dragon/serpent.bmp", NULL);
     Sol.image = load_bitmap("../images/dragon/screensol_24bit.bmp", NULL);
@@ -56,7 +89,6 @@ int main() {
 
     while (!key[KEY_ESC]) {
         clear_bitmap(page);
-
         //DeplacementJoueurs(Dragon, Serpent);
         if (key[KEY_LEFT]) {
             Dragon.dx = -3;
@@ -140,7 +172,8 @@ int main() {
                 stretch_blit(Sol.image, page, 0, 0, Sol.image->w, Sol.image->h, colonne * CaseW, ligne * CaseH, CaseW, CaseH);
             }
         }
-
+        deplacement(Dragon, tomate, page);
+        stretch_blit(tomate.image, page, 0, 0, tomate.image->w, tomate.image->h, tomate.x, tomate.y, 50, 50);
         stretch_blit(Dragon.image, page, 0, 0, Dragon.image->w, Dragon.image->h, Dragon.x, Dragon.y, 50, 50);
         stretch_blit(Serpent.image, page, 0, 0, Serpent.image->w, Serpent.image->h, Serpent.x, Serpent.y, 50, 50);
         /*draw_sprite(page, Dragon.image, Dragon.x, Dragon.y);
