@@ -3,6 +3,15 @@
 #include <unistd.h>
 #include "header.h"
 
+typedef struct Element {
+    int id;
+    int x, y, ancien_x, ancien_y;
+    int etat; // Etat 1, 2, 3 pour [pas cuit, cuit, brûlé], etc.
+    BITMAP *image[10];
+} element;
+
+
+
 
 typedef struct {
     int x, y;
